@@ -1,0 +1,36 @@
+CREATE DATABASE perpustakaan;
+USE perpustakaan;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    peran ENUM('admin', 'peminjam') NOT NULL
+);
+
+CREATE TABLE kategori_buku (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama_kategori VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE buku (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    penulis VARCHAR(100) NOT NULL,
+    penerbit VARCHAR(100) NOT NULL,
+    tahun YEAR NOT NULL,
+    id_kategori INT NOT NULL,
+    FOREIGN KEY (id_kategori) REFERENCES kategori_buku(id) ON DELETE CASCADE
+);
+
+CREATE TABLE peminjaman (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_user INT NOT NULL,
+    id_buku INT NOT NULL,
+    tanggal_pinjam DATE NOT NULL,
+    tanggal_kembali DATE,
+    status ENUM('dipinjam', 'dikembalikan') DEFAULT 'dipinjam',
+    FOREIGN KEY (id_user) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_buku) REFERENCES buku(id) ON DELETE CASCADE
+);
